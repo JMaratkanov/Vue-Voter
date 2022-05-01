@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+
+        <!-- Bootstrap import -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <!-- iconset von fontawesome holen -->
+        <script src="https://kit.fontawesome.com/e47251af3a.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="app">  <!-- gesammter Inhalt in app.Js an Vue gebunden {{ inhalte werden beim Rendern aus Speicher geholt und vue macht minimale Änderungen an der Dom damit die nur die Daten neu gerendert werden}}-->
+            <!-- Bootstrap ist sehr divlastig -> nutzt divs mit klassen -->
+            <div class="container-fluid">
+                <div class="row"><!--Bootstrap row kann bis zu 12 Spalten haben-->
+                    <div class="col-xl-4 offset-xl-4"><!--Auf großen Bildschrim 4/6 spalten, kleiner Bildschirm alle 12, mittig mit offset um 3 spalten schieben (col-xl-6 offset-xl-3) | | | |x|x|x|x|x|x| | | |-->
+                        <div class="card mt-5"><!-- Card mit Abstand nach oben, mt-5 Hilfsklasse: margin-top:5 (1-5), mb, mr,.. -->
+                            <div class="card-header">
+                            <h2 class="card-title">Stimme ab</h2>
+                            </div>
+                            <div class="card-body">
+                                <!-- Flex Layout benutzen (css normal)-->
+                                <div class="d-flex">
+                                    <div class="d-shrink-0"><!-- div so klein wie möglich(class="d-shrink-1"), 0: kein Zeilenunbruch innerhalb des divs-->
+                                        <!--Benutze dummybuild von placeholder.com-->
+                                        <img v-bind:src="essenArray[0].img" alt="" />   <!--Textinterpolation != Attributinterpolation, v-bind: binde etwas an dieses Attribut (directive immer mit v)-->
+                                        <!--<img src="https://via.placeholder.com/60" alt="" />-->
+                                    </div>
+                                    <div class="flex-grow-1 ms-3" ><!--Zeilenumbruch erlaubt, dehnt div soweit es geht, margin start 3-->
+                                        <h5> {{essenArray[0].title}}       <!--vorher hardcoded: "Pizza", mit vm.$data.essenArray[0].title = 'Test' in Browserkonsole änderbar, Wenn man möchte dass diese Stelle nur 1x gerendert wird (Daten ändern sich trz): <h5 v-once> -->
+                                            <span class="float-end text-primary" style="cursor:pointer;"
+                                            v-on:click="inc"><!--rechtsbündig, txt-blau, wenn mit maus über icon- maus ändert sich, v-on: directive für eventlistener--><!--v-on:click="essenArray[0].votes++;" Methode:ohne()-->
+                                                <i class="fa fa-chevron-up"></i><!--icon mit Pfeil nach oben-->
+                                                <strong>
+                                                    {{essenArray[0].votes}}<!--16-->
+                                                </strong>
+                                            </span>
+                                        </h5>
+                                        <div>{{essenArray[0].desc}}<!--Teig mit Käse und Sauce--></div> 
+                                        <small v-html="essenArray[0].author" class="text-muted"><!--Sieht gut aus--></small><!--Grauer Text--><!--v-html erlaubt html in Textinterpolation, v-pre>{{bla}}</div> interpoliert nichts was im Tag steht {{ als text möglich}}-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- aktuellste Version von vue einbinden
+        <script src="https://unpkg.com/vue@next"></script>-->
+        <script src="https://unpkg.com/vue@3.1.5"></script>
+        <script src="seed.js"></script>
+        <script src="app.js"></script>
+
+    </body>
+</html>
