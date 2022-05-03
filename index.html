@@ -20,7 +20,10 @@
                     <div class="col-xl-4 offset-xl-4"><!--Auf großen Bildschrim 4/6 spalten, kleiner Bildschirm alle 12, mittig mit offset um 3 spalten schieben (col-xl-6 offset-xl-3) | | | |x|x|x|x|x|x| | | |-->
                         <div class="card mt-5"><!-- Card mit Abstand nach oben, mt-5 Hilfsklasse: margin-top:5 (1-5), mb, mr,.. -->
                             <div class="card-header">
-                            <h2 class="card-title">Stimme ab</h2>
+                            <h2 class="card-title">Stimme ab
+                                <span class="float-end">methods {{totalVotes()}} Stimmen</span> <!--Methodenaufruf ohne event--> <!-- wird auch zb durch browser:vm.$data.essenArray[0].title = 'bla' getriggert-->
+                                <br><small class="float-end">computed {{totalVotes2}} Stimmen</small> <!--computed: ist fk aber wird wie daten benutzt-->
+                            </h2>
                             </div>
                             <div class="card-body">
                                 <!-- Flex Layout benutzen (css normal)-->
@@ -33,8 +36,9 @@
                                     <div class="flex-grow-1 ms-3" ><!--Zeilenumbruch erlaubt, dehnt div soweit es geht, margin start 3-->
                                         <h5> {{essenArray[0].title}}       <!--vorher hardcoded: "Pizza", mit vm.$data.essenArray[0].title = 'Test' in Browserkonsole änderbar, Wenn man möchte dass diese Stelle nur 1x gerendert wird (Daten ändern sich trz): <h5 v-once> -->
                                             <span class="float-end text-primary" style="cursor:pointer;"
-                                            v-on:click="inc"><!--rechtsbündig, txt-blau, wenn mit maus über icon- maus ändert sich, v-on: directive für eventlistener--><!--v-on:click="essenArray[0].votes++;" Methode:ohne()-->
-                                                <i class="fa fa-chevron-up"></i><!--icon mit Pfeil nach oben-->
+                                            v-on:click="inc('text'), logConsole($event)"><!--rechtsbündig, txt-blau, wenn mit maus über icon- maus ändert sich, v-on: directive für eventlistener--><!--v-on:click="essenArray[0].votes++;" Methode:ohne()-->
+                                         <!--v-on:click.right="inc('text') - Eventmodifier:Rechte Maustaste click oder strg + etc-->       
+                                            <i class="fa fa-chevron-up"></i><!--icon mit Pfeil nach oben-->
                                                 <strong>
                                                     {{essenArray[0].votes}}<!--16-->
                                                 </strong>
