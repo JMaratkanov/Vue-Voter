@@ -5,19 +5,19 @@ const app = Vue.createApp({ //konfiguriere Root-Komponent
     data: () =>{     //erwartet Funktion die bei Erstellung der Instanz aufgerufen wird
         return {    //deklariere reaktive Daten, Ändern sich die Daten, ändert sich das template
             essenArray: submissions, //aus seed.js
+            totalVotes3: 0  //computed
         }  
     },
     computed:{  //methods nicht optiomal um Daten die auf anderen Daten basieren zu verwalten: computed
         //berechnete Eigenschaften
-        totalVotes2(){    //ist jetzt eine computed Property, ist Funktion aber in Template ohne () ausgeführt!
-            console.log("computed");
-            
-            return this.essenArray.reduce((totalvotes, essen)=>{
+        totalVotes2(){    //ist jetzt eine computed Property, ist Funktion aber in Template ohne () ausgeführt!//soll dich wie variable verhalten
+            console.log("computed");                //Der Wert der Variable ist aber der Wert des returns, Methode wird aufgerufen sobald sich eine der daten im fk-rumpf ändert;
+            return  this.essenArray.reduce((totalvotes, essen)=>{
                 return totalvotes + essen.votes;
             }, 0); //startert beginnt bei 0
         }
     },
-    methods:{       //Objekt mit Funktionen
+    methods:{       //Objekt mit Funktionen, methods für events am besten
         //inc: function(){},
         //inc: () => !!!! Achtung bei .this in arrowfk ist this ungebunden!!! Hier keine arrowfks
         inc(text){             //Kann void sein, aber durch v-on:click="inc" gibt vue ein event mit; v-on:click="inc()" nicht; v-on:click="inc("hallo") gibt eigenen parameter mit,v-on:click="inc("hallo", $event) gibt eigene Args + event   
@@ -31,11 +31,37 @@ const app = Vue.createApp({ //konfiguriere Root-Komponent
         totalVotes(){   //Methoden müssen nicht an Events gekoppelt sein, diese methode wird initial ausgeführt und immer wenn sich das Template irgendwie ändert: - Nachteil methods, auf reaktive Daten nicht in methods reagieren 
             console.log("methods");
             
-            return this.essenArray.reduce((totalvotes, essen)=>{
-                return totalvotes + essen.votes;
-            }, 0); //startert beginnt bei 0
+            return this.essenArray.reduce((totalvotes, essen)=>{return totalvotes + essen.votes;}, 0); //startert beginnt bei 0
         }
-    },       
+    },
+    watch:{ //Hier kann man Daten bobachten, Bei primitiven Datentypen klappt das, bei Objekten nicht: Zeiger auf Speicher ändert sich nicht
+       // essenArray(newVal, oldVal){   //heißt wie Variable und ist aber Funktion, essenArray ist kein primitiver Datentyp
+       //     console.log(oldVal,newVal);
+       // },
+        
+        //selbe Schreibweise
+        /*essenArray:{
+            handler(newVal, oldVal){   //heißt wie Variable und ist aber Funktion, essenArray ist kein primitiver Datentyp
+                console.log(oldVal,newVal);
+            }
+        },*/
+        //Lösung für das Problem
+        essenArray:{
+            handler(newVal, oldVal){   //heißt wie Variable und ist aber Funktion, essenArray ist kein primitiver Datentyp
+                console.log(oldVal,newVal);
+                this.totalVotes3 = this.essenArray.reduce((totalvotes, essen)=>{
+                    return totalvotes + essen.votes;
+                }, 0);
+            },
+            deep:true, //beobachte Daten auch innerhalb des Objektes
+            immediate:true  //Weil sonst ist totalVotes am Anfang 0 -> wurde deklariert und initialisiert, aber watcher guckt erst auf nächste Änderung
+        },
+
+        totalVotes3(newVal, oldVal){   //heißt wie Variable und ist aber Funktion, essenArray ist kein primitiver Datentyp
+            console.log(oldVal,newVal);
+        }
+
+    }       
 
 });    
 
