@@ -6,67 +6,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
 
-        <!-- Bootstrap import -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-        <!-- iconset von fontawesome holen -->
         <script src="https://kit.fontawesome.com/e47251af3a.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div id="app">  <!-- gesammter Inhalt in app.Js an Vue gebunden {{ inhalte werden beim Rendern aus Speicher geholt und vue macht minimale Änderungen an der Dom damit die nur die Daten neu gerendert werden}}-->
-            <!-- Bootstrap ist sehr divlastig -> nutzt divs mit klassen -->
+        <div id="app">  
             <div class="container-fluid">
-                <div class="row"><!--Bootstrap row kann bis zu 12 Spalten haben-->
-                    <div class="col-xl-4 offset-xl-4"><!--Auf großen Bildschrim 4/6 spalten, kleiner Bildschirm alle 12, mittig mit offset um 3 spalten schieben (col-xl-6 offset-xl-3) | | | |x|x|x|x|x|x| | | |-->
-                        <div class="card mt-5"><!-- Card mit Abstand nach oben, mt-5 Hilfsklasse: margin-top:5 (1-5), mb, mr,.. -->
-                            <div class="card-header">
-                            <h2 class="card-title">Stimme ab
-                                <span class="float-end">methods {{totalVotes()}} Stimmen</span> <!--Methodenaufruf ohne event--> <!-- wird auch zb durch browser:vm.$data.essenArray[0].title = 'bla' getriggert-->
-                                <br><small class="float-end">computed {{totalVotes2}} Stimmen</small> <!--computed: ist fk aber wird wie daten benutzt-->
-                                <br><small class="float-end">watch {{totalVotes3}} Stimmen</small>
+                <div class="row">
+                    <div class="col-xl-4 offset-xl-4">
+                        <div class="card mt-5">
+                            <div class="card-header" v-bind:class="changeCss"> <!--  v-bind:class="{'bg-primary': totalVotes2 >70, 'text-white': totalVotes2 >70}">   !--css class/style dynamisch ändern: binden key:class value:bedingung, nicht elegant template&logik trennen-->
+                            <h2 class="card-title" v-bind:style="changeStyle"> <!--" v-bind:style="{ fontSize: totalVotes2+'px'}">Stimme ab !--CamelCase - css font-size wird fontSize -->
+
+                             <small class="float-end">computed {{totalVotes2}} Stimmen</small> 
+                         
                             </h2>
                             </div>
                             <div class="card-body">
-                                <!-- Flex Layout benutzen (css normal)-->
-                                <!--<template v-for="essen in sortedEss.... template verschwindet beim rendern im gegensatz zu div -->
-                                <div class="d-flex" v-for="essen in sortedEssenArray" v-bind:key="essen.id"><!-- Hier mit computed Attribut
-                                <div class="d-flex" v-for="essen in essenArray" v-bind:key="essen.id">--> <!--ohne v-for - nur ein Eintrag, einfach essenArray[0] durch essen ersetzen, man kann auch of nehmen oder (essen,indx) in essenArray -> dann {{essen title}} und {{indx}} nutzbar-->
-                                    <!--v-bind:key - Weil wenn wir das erste Element löschen ersetzt Vue einfach nur die Inhalte in der Dom: jeder Eintrag kriegt Key und ist dann eine Einheit - Kein inplace mehr - nehme als key einen primitiven staischen Wert-->
-                                    <!--Bei v-for am besten immer Keyattr binden: Hätte ich in Element ein Inputfeld mit Inhalt und lösche das erste Element kriegt sonst das 2te Feld das Inputfeld mit diesem Text-->
-                                    <div class="d-shrink-0"><!-- div so klein wie möglich(class="d-shrink-1"), 0: kein Zeilenunbruch innerhalb des divs-->
-                                        <!--Benutze dummybuild von placeholder.com-->
-                                        <img v-bind:src="essen.img" alt="" />   <!--Textinterpolation != Attributinterpolation, v-bind: binde etwas an dieses Attribut (directive immer mit v)-->
-                                        <!--<img src="https://via.placeholder.com/60" alt="" />-->
-                                    </div>
-                                    <div class="flex-grow-1 ms-3" ><!--Zeilenumbruch erlaubt, dehnt div soweit es geht, margin start 3-->
-                                        <h5> {{essen.title}}       <!--vorher hardcoded: "Pizza", mit vm.$data.essenArray[0].title = 'Test' in Browserkonsole änderbar, Wenn man möchte dass diese Stelle nur 1x gerendert wird (Daten ändern sich trz): <h5 v-once> -->
-                                            <span class="float-end text-primary" style="cursor:pointer;"
-                                            v-on:click="inc('text'), logConsole($event), inc2(essen.id)"><!--rechtsbündig, txt-blau, wenn mit maus über icon- maus ändert sich, v-on: directive für eventlistener--><!--v-on:click="essenArray[0].votes++;" Methode:ohne()-->
-                                         <!--v-on:click.right="inc('text') - Eventmodifier:Rechte Maustaste click oder strg + etc-->       
-                                            <i class="fa fa-chevron-up"></i><!--icon mit Pfeil nach oben-->
-                                                <strong>
-                                                    {{essen.votes}}<!--16-->
-                                                </strong>
-                                            </span>
-                                        </h5>
-                                        <ul>
-                                            <li v-for="(value, key, index) in essen">index: {{index}} -key: {{key}} -val: {{value}}</li><!--iter über obj statt array, jetzt bis zu 3 args möglich statt 2: value in essen-->
-                                        </ul>
-
-                                        <div>{{essen.desc}}<!--Teig mit Käse und Sauce--></div> 
-                                        <small v-html="essen.author" class="text-muted"><!--Sieht gut aus--></small><!--Grauer Text--><!--v-html erlaubt html in Textinterpolation, v-pre>{{bla}}</div> interpoliert nichts was im Tag steht {{ als text möglich}}-->
-                                        <hr><p style="color:red;">Wenn man den hr nach dem div und nicht im div möchte template-tag benutzen</p>
-                                    </div>
-                                </div>
+                               <template  v-for="essen in sortedEssenArray" v-bind:key="essen.id">
+                                <Listen-element :essen="essen"></listen-element>  <!--gebe Attribut weiter-->
+                                <!--Abkürzung für v-bind:essen => :essen, v-on:click     => @click=-->
+                                <hr></template>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- aktuellste Version von vue einbinden
-        <script src="https://unpkg.com/vue@next"></script>-->
         <script src="https://unpkg.com/vue@3.1.5"></script>
         <script src="seed.js"></script>
         <script src="app.js"></script>
