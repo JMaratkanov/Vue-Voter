@@ -15,6 +15,9 @@ const app = Vue.createApp({ //konfiguriere Root-Komponent
             return  this.essenArray.reduce((totalvotes, essen)=>{
                 return totalvotes + essen.votes;
             }, 0); //startert beginnt bei 0
+        },
+        sortedEssenArray(){ //Sortiere die Reihenfolge des Arrays - benutze diese fk wie ein Datenobjekt anstelle von essenArray
+            return this.essenArray.sort((a,b)=> b.votes-a.votes);
         }
     },
     methods:{       //Objekt mit Funktionen, methods für events am besten
@@ -23,7 +26,15 @@ const app = Vue.createApp({ //konfiguriere Root-Komponent
         inc(text){             //Kann void sein, aber durch v-on:click="inc" gibt vue ein event mit; v-on:click="inc()" nicht; v-on:click="inc("hallo") gibt eigenen parameter mit,v-on:click="inc("hallo", $event) gibt eigene Args + event   
             console.log(this);  //mit this Zugriff auf fast alles der rootinstanz
             console.log(text);
-            this.essenArray[0].votes++;
+            //this.essenArray[0].votes++;
+        },
+        inc2(id){
+            console.log(id);
+            const essen = this.essenArray.find(
+                (essen) => essen.id === id
+            );
+            essen.votes++;
+            //this.essenArray[id-1].votes++; klappt nicht
         },
         logConsole(event){
             console.log(event);
